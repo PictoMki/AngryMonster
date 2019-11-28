@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
         routes: {
           '/': (context) => NewView(),
+          '/new': (context) => NewView(),
           '/start': (context) => StartView(),
         },
       theme: ThemeData(

@@ -1,7 +1,6 @@
 import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
-import 'StartView.dart';
 
 class NewView extends StatefulWidget {
   @override

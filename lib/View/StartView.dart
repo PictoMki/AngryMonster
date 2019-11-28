@@ -1,6 +1,7 @@
 import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
+import '../Logic/Random.dart';
 
 class StartView extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class StartView extends StatefulWidget {
 }
 
 class _StartViewState extends State<StartView> with SingleTickerProviderStateMixin {
+  int _allcounter;
   int _nowUser;
   int _counter;
   bool judge;
@@ -90,12 +92,77 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
             ),
             FlatButton(
               child: Text("STOP"),
-              onPressed: setUser,
+              onPressed: (){
+                stopDialog(context);
+              }
             ),
             grid
           ],
         ),
       ),
+    );
+  }
+
+  void endDialog(context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text("Angry!!!"),
+          content: Text("Monsterが怒ってしまいました。"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                  "終了",
+                  style: TextStyle(
+                      color: Colors.black54
+                  )
+              ),
+              onPressed: (){
+                Navigator.pushNamed(context, '/');
+              } ,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void stopDialog(context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text("タップ完了"),
+          content: Text("次の方に移動します。"),
+          actions: <Widget>[
+            // ボタン領域
+            FlatButton(
+              child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                      color: Colors.black54
+                  )
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                  "OK",
+                  style: TextStyle(
+                      color: Colors.black54
+                  )
+              ),
+              onPressed: (){
+                setUser();
+                Navigator.pop(context);
+              } ,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -115,27 +182,80 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
 
   void countUp() {
     _counter++;
-    setState(() {
-      _userCounter[_nowUser] = _counter;
-      iconState = !iconState;
-      _image = iconState ? "assets/images/heart.png" : "assets/images/angry.png";
-      createGrid();
-    });
+    if (RandomLogic().randomBool(_counter)) {
+      endDialog(context);
+    }
+    else{
+      setState(() {
+        _userCounter[_nowUser] = _counter;
+        iconState = !iconState;
+        _image = iconState ? "assets/images/heart.png" : "assets/images/angry.png";
+        createGrid();
+      });
+    }
   }
 
   void createGrid() async {
     var list = await createUserContainer();
-    var gridWidget = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: list
-    );
+    print(list[0].length);
+    print(list[1].length);
+    print(list[2].length);
+    var gridWidget;
+    if (list[0].length <= 3) {
+      print(1);
+      gridWidget = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: list[0]
+      );
+    }
+    else{
+      if (list[1].length <= 3) {
+        print(2);
+        gridWidget = Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: list[0]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: list[1]
+            ),
+          ],
+        );
+      }
+      else{
+        print(3);
+        gridWidget = Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: list[0]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: list[1]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: list[2]
+            ),
+          ],
+        );
+      }
+    }
     setState(() {
       grid = gridWidget;
     });
   }
 
-  Future <List<Widget>> createUserContainer() async {
-    var items = <Widget>[];
+  Future <List<List<Widget>>> createUserContainer() async {
+    var items1 = <Widget>[];
+    var items2 = <Widget>[];
+    var items3 = <Widget>[];
+    var items = [items1,items2,items3];
     for (var i = 0; i < AppInfo.user.length; i++){
       var item =
       Container(
@@ -164,7 +284,14 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
             ],
           )
       );
-      items.add(item);
+      if (i < 3) {
+        items1.add(item);
+      }else if (3 <= i  && i < 6) {
+        items2.add(item);
+      }else{
+        items3.add(item);
+      }
+
     }
     return items;
   }
