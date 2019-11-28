@@ -1,5 +1,7 @@
 import '../Model/sizeInfo.dart';
+import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
+import 'StartView.dart';
 
 class NewView extends StatefulWidget {
   @override
@@ -237,7 +239,7 @@ class _NewViewState extends State<NewView>{
                 FlatButton(
                   child: Text("スタート"),
                   onPressed: (){
-                    Navigator.pushNamed(context, '/start');
+                    startButtonPushed();
                   },
                 )
               ],
@@ -246,5 +248,50 @@ class _NewViewState extends State<NewView>{
         ),
       )
     );
+  }
+
+  void startButtonPushed() {
+    AppInfo.user = [];
+    if (_controller1.text != "") {
+      AppInfo.user.add(_controller1.text);
+    }
+    if (_controller2.text != "") {
+      AppInfo.user.add(_controller2.text);
+    }
+    if (_controller3.text != "") {
+      AppInfo.user.add(_controller3.text);
+    }
+    if (_controller4.text != "") {
+      AppInfo.user.add(_controller4.text);
+    }
+    if (_controller5.text != "") {
+      AppInfo.user.add(_controller5.text);
+    }
+    if (_controller6.text != "") {
+      AppInfo.user.add(_controller6.text);
+    }
+    if (_controller7.text != "") {
+      AppInfo.user.add(_controller7.text);
+    }
+    if (_controller8.text != "") {
+      AppInfo.user.add(_controller8.text);
+    }
+    if (_controller9.text != "") {
+      AppInfo.user.add(_controller9.text);
+    }
+    clearText();
+    Navigator.pushReplacementNamed(context, '/start');
+  }
+
+  void clearText() {
+    _controller1.clear();
+    _controller2.clear();
+    _controller3.clear();
+    _controller4.clear();
+    _controller5.clear();
+    _controller6.clear();
+    _controller7.clear();
+    _controller8.clear();
+    _controller9.clear();
   }
 }

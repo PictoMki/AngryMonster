@@ -1,4 +1,5 @@
 import '../Model/sizeInfo.dart';
+import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
 
 class StartView extends StatefulWidget {
@@ -7,11 +8,15 @@ class StartView extends StatefulWidget {
 }
 
 class _StartViewState extends State<StartView> with SingleTickerProviderStateMixin {
-  int _counter = 0;
+  int _nowUser;
+  int _counter;
+  bool judge;
+
   String _image = "assets/images/heart.png";
-  bool _random = false;
-  var user = ["user1","user2","user3"];
-  Widget Grid = Container();
+  bool iconState = false;
+  static var _userCounter;
+  static var _userColor;
+  Widget grid;
 
   Animation<double> animation;
   AnimationController controller;
@@ -19,16 +24,20 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
 
   initState() {
     super.initState();
-    createGrid();
+    _nowUser = 0;
+    _counter = 0;
+    grid = Container();
+    _userCounter = [0,0,0,0,0,0,0,0,0];
+    _userColor = [Colors.red,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54];
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
         vsync: this
     );
-
     animation = tween.animate(controller)
       ..addListener(() {
         setState(() {});
       });
+    createGrid();
   }
 
   shrinkAnimation() {
@@ -81,19 +90,35 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
             ),
             FlatButton(
               child: Text("STOP"),
+              onPressed: setUser,
             ),
-            Grid
+            grid
           ],
         ),
       ),
     );
   }
 
-  void countUp() {
+  void setUser() {
     setState(() {
-      _counter++;
-      _random = !_random;
-      _image = _random ? "assets/images/heart.png" : "assets/images/angry.png";
+      _userColor[_nowUser] = Colors.black54;
+      if (_nowUser == AppInfo.user.length - 1) {
+        _nowUser = 0;
+      }else{
+        _nowUser++;
+      }
+      _userColor[_nowUser] = Colors.red;
+      _counter = _userCounter[_nowUser];
+      createGrid();
+    });
+  }
+
+  void countUp() {
+    _counter++;
+    setState(() {
+      _userCounter[_nowUser] = _counter;
+      iconState = !iconState;
+      _image = iconState ? "assets/images/heart.png" : "assets/images/angry.png";
       createGrid();
     });
   }
@@ -105,34 +130,33 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
       children: list
     );
     setState(() {
-      Grid = gridWidget;
+      grid = gridWidget;
     });
   }
 
   Future <List<Widget>> createUserContainer() async {
     var items = <Widget>[];
-    for (var i = 0; i < user.length; i++){
-      print(sizeInfo.blockSize);
+    for (var i = 0; i < AppInfo.user.length; i++){
       var item =
       Container(
         width: sizeInfo.blockSize,
         height: sizeInfo.blockSize,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54),
+            border: Border.all(color: _userColor[i]),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Center(
-                child: Text(user[i]),
+                child: Text(AppInfo.user[i]),
               ),
               Center(
                 child: Container(
                   width: sizeInfo.blockSize/2,
                   height: sizeInfo.blockSize/2,
                   child: Center(
-                      child: Text(_counter.toString()),
+                      child: Text(_userCounter[i].toString()),
                   ),
                 ),
               )
