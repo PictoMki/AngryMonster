@@ -377,7 +377,7 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
 
   InterstitialAd myInterstitial() {
     return InterstitialAd(
-      adUnitId: InterstitialAd.testAdUnitId,
+      adUnitId: AdmobInfo.interstitialId,
       targetingInfo: AdmobInfo.targetingInfo,
       listener: (MobileAdEvent event) {
         if (event == MobileAdEvent.failedToLoad) {

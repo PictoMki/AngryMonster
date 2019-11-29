@@ -66,7 +66,7 @@ class _SplashViewState extends State<SplashView> {
 
   BannerAd myBanner = BannerAd(
     // 広告ユニットID（テスト用のIDを使用、本番は自分の広告ユニットIDを利用）
-    adUnitId: BannerAd.testAdUnitId,
+    adUnitId: AdmobInfo.bannerId,
     size: AdSize.smartBanner,
     targetingInfo: AdmobInfo.targetingInfo,
     listener: (MobileAdEvent event) {
