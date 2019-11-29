@@ -34,6 +34,15 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
     grid = Container();
     _userCounter = [0,0,0,0,0,0,0,0,0];
     _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
+
+    if (AppInfo.user.length < 3){
+      SizeInfo.blockHeight = SizeInfo.blockHeight * 3;
+    }else if (AppInfo.user.length < 6) {
+      SizeInfo.blockHeight = SizeInfo.blockHeight * 2;
+    }else {
+
+    }
+
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
         vsync: this
@@ -109,6 +118,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
   void endDialog(context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
           title: Text("Angry!!!"),
@@ -134,6 +144,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
   void stopDialog(context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
           title: Text("タップ完了"),
@@ -202,26 +213,24 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
 
   void createGrid() async {
     var list = await createUserContainer();
-    print(list[0].length);
-    print(list[1].length);
-    print(list[2].length);
     var gridWidget;
-    if (list[0].length <= 3) {
-      print(1);
+    if (list[0].length < 3) {
       gridWidget = Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: list[0]
       );
     }
     else{
-      if (list[1].length <= 3) {
-        print(2);
+      if (list[1].length < 3) {
         gridWidget = Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: list[0]
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 5),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -231,7 +240,6 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
         );
       }
       else{
-        print(3);
         gridWidget = Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -239,9 +247,15 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: list[0]
             ),
+            Padding(
+              padding: EdgeInsets.only(top: 5),
+            ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: list[1]
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 5),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -261,11 +275,12 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
     var items2 = <Widget>[];
     var items3 = <Widget>[];
     var items = [items1,items2,items3];
+
     for (var i = 0; i < AppInfo.user.length; i++){
       var item =
       Container(
-        width: sizeInfo.blockSize,
-        height: sizeInfo.blockSize,
+        width: SizeInfo.blockWidth,
+        height: SizeInfo.blockHeight,
           decoration: BoxDecoration(
             border: Border.all(color: _userColor[i]),
             borderRadius: BorderRadius.circular(10),
@@ -278,8 +293,8 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
               ),
               Center(
                 child: Container(
-                  width: sizeInfo.blockSize/2,
-                  height: sizeInfo.blockSize/2,
+                  width: SizeInfo.blockWidth/2,
+                  height: SizeInfo.blockHeight/2,
                   child: Center(
                       child: Text(_userCounter[i].toString()),
                   ),

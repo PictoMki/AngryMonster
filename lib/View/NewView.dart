@@ -2,6 +2,7 @@ import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 class NewView extends StatefulWidget {
   @override
@@ -33,19 +34,21 @@ class _NewViewState extends State<NewView>{
 
   @override
   Widget build(BuildContext context) {
-    sizeInfo.displayWidth = MediaQuery.of(context).size.width;
-    sizeInfo.displayHeight = MediaQuery.of(context).size.height;
-    sizeInfo.blockPadding = 10;
-    sizeInfo.blockSize = sizeInfo.displayWidth / 3 - sizeInfo.blockPadding * 3;
+    SizeInfo.displayWidth = MediaQuery.of(context).size.width;
+    SizeInfo.displayHeight = MediaQuery.of(context).size.height;
+    SizeInfo.blockPadding = 10;
+    SizeInfo.blockWidth = SizeInfo.displayWidth / 3 - SizeInfo.blockPadding * 3;
+    SizeInfo.blockHeight = SizeInfo.displayHeight / 9 - SizeInfo.blockPadding * 3;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_focusNode),
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text("AngryMonster"),
         ),
         body: Center(
           child: Container(
-            width: sizeInfo.displayWidth,
+            width: SizeInfo.displayWidth,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -63,7 +66,7 @@ class _NewViewState extends State<NewView>{
                   ),
                 ),
                 Container(
-                  width: sizeInfo.displayWidth,
+                  width: SizeInfo.displayWidth,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -71,7 +74,7 @@ class _NewViewState extends State<NewView>{
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -88,7 +91,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -105,7 +108,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -130,7 +133,7 @@ class _NewViewState extends State<NewView>{
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -147,7 +150,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -164,7 +167,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -189,7 +192,7 @@ class _NewViewState extends State<NewView>{
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -206,7 +209,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -223,7 +226,7 @@ class _NewViewState extends State<NewView>{
                             ),
                           ),
                           Container(
-                            width: sizeInfo.blockSize,
+                            width: SizeInfo.blockWidth,
                             height: 60,
                             child: TextField(
                               style: TextStyle(
@@ -306,6 +309,7 @@ class _NewViewState extends State<NewView>{
   void stopDialog(context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
           title: Text("Warning !!!!"),
