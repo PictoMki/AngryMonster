@@ -2,6 +2,7 @@ import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
 import '../Logic/Random.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartView extends StatefulWidget {
   @override
@@ -9,16 +10,18 @@ class StartView extends StatefulWidget {
 }
 
 class _StartViewState extends State<StartView> with SingleTickerProviderStateMixin {
-  int _allcounter;
   int _nowUser;
   int _counter;
   bool judge;
 
-  String _image = "assets/images/heart.png";
+  String _image = "assets/images/state/heart.png";
   bool iconState = false;
   static var _userCounter;
   static var _userColor;
   Widget grid;
+  static const red = Colors.red;
+  static const grey = Colors.black54;
+
 
   Animation<double> animation;
   AnimationController controller;
@@ -30,7 +33,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
     _counter = 0;
     grid = Container();
     _userCounter = [0,0,0,0,0,0,0,0,0];
-    _userColor = [Colors.red,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54,Colors.black54];
+    _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
         vsync: this
@@ -72,7 +75,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                       SizedBox(
                         height: animation.value,
                         width: animation.value,
-                        child: Image.asset('assets/images/icon.png'),
+                        child: Image.asset('assets/images/monster/normal/icon.png'),
                       ),
                       SizedBox(
                         height: animation.value,
@@ -119,7 +122,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                   )
               ),
               onPressed: (){
-                Navigator.pushNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/');
               } ,
             ),
           ],
@@ -182,6 +185,8 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
 
   void countUp() {
     _counter++;
+    AppInfo.allCount++;
+    saveData(AppInfo.allCount);
     if (RandomLogic().randomBool(_counter)) {
       endDialog(context);
     }
@@ -189,7 +194,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
       setState(() {
         _userCounter[_nowUser] = _counter;
         iconState = !iconState;
-        _image = iconState ? "assets/images/heart.png" : "assets/images/angry.png";
+        _image = iconState ? "assets/images/state/heart.png" : "assets/images/state/angry.png";
         createGrid();
       });
     }
@@ -294,6 +299,12 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
 
     }
     return items;
+  }
+
+  saveData(int allCount) async {
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setInt("allCount", allCount);
   }
 
 }

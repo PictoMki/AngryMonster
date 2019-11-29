@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
         routes: {
-          '/': (context) => NewView(),
+          '/': (_) => NewView(),
           '/new': (context) => NewView(),
           '/start': (context) => StartView(),
         },
