@@ -2,11 +2,13 @@
 import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import '../Model/Monster.dart';
+import '../Model/AdmobInfo.dart';
 /// Logicのimport
 import '../Logic/Random.dart';
 /// Packageのimport
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 
 class MonsterView extends StatefulWidget {
@@ -15,6 +17,7 @@ class MonsterView extends StatefulWidget {
 }
 
 class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStateMixin {
+
   int _nowUser;
   int _counter;
   bool judge;
@@ -37,20 +40,19 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
 
   initState() {
     super.initState();
-    print("init");
+    FirebaseAdMob.instance.initialize(appId: AdmobInfo.interstitialId);
+    AdmobInfo.interstitialAd = myInterstitial()..load();
+
+    AdmobInfo.interstitialAd
+      ..load()
+      ..show();
+
     _nowUser = 0;
     _counter = 0;
     grid = Container();
     _userCounter = [0,0,0,0,0,0,0,0,0];
     _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
 
-    if (AppInfo.user.length < 3){
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 3;
-    }else if (AppInfo.user.length < 6) {
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 2;
-    }else {
-
-    }
 
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
@@ -371,6 +373,20 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
     }else{
       return false;
     }
+  }
+
+  InterstitialAd myInterstitial() {
+    return InterstitialAd(
+      adUnitId: InterstitialAd.testAdUnitId,
+      targetingInfo: AdmobInfo.targetingInfo,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.failedToLoad) {
+          AdmobInfo.interstitialAd..load();
+        } else if (event == MobileAdEvent.closed) {
+          AdmobInfo.interstitialAd = myInterstitial()..load();
+        }
+      },
+    );
   }
 
 }

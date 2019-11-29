@@ -2,9 +2,9 @@ name: AngryMonster
 description: A new Flutter application.
 # pubspec.yaml(flutter_launcher_icons-development.yamlでも良い)
 flutter_icons:
-  image_path: "assets/icon/icon.png"
+  image_path: "assets/icon/and-icon.png"
   android: true
-  ios: true
+  ios: false
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -26,6 +26,7 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.7.4
   shared_preferences: ^0.5.4+6
+  firebase_admob: ^0.9.0+9
 
 
   # The following adds the Cupertino Icons font to your application.

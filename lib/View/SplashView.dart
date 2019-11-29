@@ -1,5 +1,7 @@
+import 'package:AngryMonster/Model/AdmobInfo.dart';
 import 'package:flutter/material.dart';
 import '../Model/sizeInfo.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -11,6 +13,20 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
+
+    ///Admobの導入
+    // インスタンスを初期化（自分のアプリIDを挿入：今回はテスト用のアプリIDを利用）
+    FirebaseAdMob.instance.initialize(appId: AdmobInfo.bannerId);
+
+    // バナー広告を表示する
+    myBanner
+      ..load()
+      ..show(
+        // ボトムからのオフセットで表示位置を決定
+        anchorOffset: 0.0,
+        anchorType: AnchorType.bottom,
+      );
+
   }
 
   @override
@@ -45,4 +61,17 @@ class _SplashViewState extends State<SplashView> {
         )
     );
   }
+
+
+
+  BannerAd myBanner = BannerAd(
+    // 広告ユニットID（テスト用のIDを使用、本番は自分の広告ユニットIDを利用）
+    adUnitId: BannerAd.testAdUnitId,
+    size: AdSize.smartBanner,
+    targetingInfo: AdmobInfo.targetingInfo,
+    listener: (MobileAdEvent event) {
+      // 広告の読み込みが完了
+      print("BannerAd event is $event");
+    },
+  );
 }
