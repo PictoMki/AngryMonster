@@ -3,6 +3,7 @@ import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
 import '../Logic/Random.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'NewView.dart';
 
 class StartView extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
   bool judge;
 
   String _image = "assets/images/state/heart.png";
+  String _iconImage = "assets/images/monster/hizume/normal.png";
   bool iconState = false;
   static var _userCounter;
   static var _userColor;
@@ -84,7 +86,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                       SizedBox(
                         height: animation.value,
                         width: animation.value,
-                        child: Image.asset('assets/images/monster/normal/icon.png'),
+                        child: Image.asset(_iconImage),
                       ),
                       SizedBox(
                         height: animation.value,
@@ -132,7 +134,11 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                   )
               ),
               onPressed: (){
-                Navigator.pushReplacementNamed(context, '/');
+//                Navigator.pushReplacementNamed(context, '/');
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  settings: RouteSettings(name: '/'),
+                  builder: (BuildContext context) => NewView(),
+                ));
               } ,
             ),
           ],
@@ -206,6 +212,7 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
         _userCounter[_nowUser] = _counter;
         iconState = !iconState;
         _image = iconState ? "assets/images/state/heart.png" : "assets/images/state/angry.png";
+        _iconImage = iconState ? "assets/images/monster/hizume/heart.png" : "assets/images/monster/hizume/angry.png";
         createGrid();
       });
     }

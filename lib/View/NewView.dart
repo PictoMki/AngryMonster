@@ -2,7 +2,6 @@ import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 
 class NewView extends StatefulWidget {
   @override
@@ -45,6 +44,7 @@ class _NewViewState extends State<NewView>{
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text("AngryMonster"),
+          leading: FlatButton(),
         ),
         body: Center(
           child: Container(
@@ -293,7 +293,7 @@ class _NewViewState extends State<NewView>{
     clearText();
     Navigator.pushReplacementNamed(context, '/start');
   }
-
+  /// ユーザー名をリセット
   void clearText() {
     _controller1.clear();
     _controller2.clear();
@@ -313,7 +313,7 @@ class _NewViewState extends State<NewView>{
       builder: (_) {
         return AlertDialog(
           title: Text("Warning !!!!"),
-          content: Text("ひづめ、ひずめ、hizume、にくづめさんがいるとモンスターがえぐくなります。"),
+          content: Text("ユーザーにひづめ、ひずめ、hizume、にくづめさんがいるとモンスターがえぐくなります。"),
           actions: <Widget>[
             // ボタン領域
             FlatButton(
