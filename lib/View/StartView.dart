@@ -1,144 +1,384 @@
 import '../Model/sizeInfo.dart';
 import '../Model/AppInfo.dart';
 import 'package:flutter/material.dart';
-import '../Logic/Random.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'NewView.dart';
+import '../Model/Monster.dart';
 
 class StartView extends StatefulWidget {
   @override
   _StartViewState createState() => _StartViewState();
 }
 
-class _StartViewState extends State<StartView> with SingleTickerProviderStateMixin {
-  int _nowUser;
-  int _counter;
-  bool judge;
+class _StartViewState extends State<StartView>{
 
-  String _image = "assets/images/state/heart.png";
-  String _iconImage = "assets/images/monster/hizume/normal.png";
-  bool iconState = false;
-  static var _userCounter;
-  static var _userColor;
-  Widget grid;
-  static const red = Colors.red;
-  static const grey = Colors.black54;
+  TextEditingController _controller1 = TextEditingController();
+  TextEditingController _controller2 = TextEditingController();
+  TextEditingController _controller3 = TextEditingController();
+  TextEditingController _controller4 = TextEditingController();
+  TextEditingController _controller5 = TextEditingController();
+  TextEditingController _controller6 = TextEditingController();
+  TextEditingController _controller7 = TextEditingController();
+  TextEditingController _controller8 = TextEditingController();
+  TextEditingController _controller9 = TextEditingController();
 
+  var listView;
 
-  Animation<double> animation;
-  AnimationController controller;
-  final tween = Tween(begin: 200.0, end: 250.0);
+  var hizumeMode = false;
 
-  initState() {
+  FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
     super.initState();
-    _nowUser = 0;
-    _counter = 0;
-    grid = Container();
-    _userCounter = [0,0,0,0,0,0,0,0,0];
-    _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
+    getData();
+    listView = ListView();
 
-    if (AppInfo.user.length < 3){
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 3;
-    }else if (AppInfo.user.length < 6) {
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 2;
-    }else {
-
-    }
-
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 100),
-        vsync: this
-    );
-    animation = tween.animate(controller)
-      ..addListener(() {
-        setState(() {});
-      });
-    createGrid();
   }
-
-  shrinkAnimation() {
-    controller.reverse();
-    Future.delayed(Duration(milliseconds: 100)).then( (_) => controller.forward());
-  }
-
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("AngryMonster"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              width: 300,
-              height: 250,
-              child: GestureDetector(
-                  onTap: () {
-                    countUp();
-                    shrinkAnimation();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: animation.value,
-                        width: animation.value,
-                        child: Image.asset(_iconImage),
-                      ),
-                      SizedBox(
-                        height: animation.value,
-                        width: 50,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset(_image),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
-            ),
-            FlatButton(
-              child: Text("STOP"),
-              onPressed: (){
-                stopDialog(context);
-              }
-            ),
-            grid
-          ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_focusNode),
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          title: Text("AngryMonster"),
+          leading: FlatButton(),
         ),
-      ),
+        body: Center(
+          child: Container(
+            width: SizeInfo.displayWidth,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(
+                    "参加するメンバーを入力して！",
+                  style: TextStyle(
+                    fontSize: 24
+                  ),
+                ),
+                Text(
+                  "今までの総タップ数:${AppInfo.allCount}",
+                  style: TextStyle(
+                      fontSize: 20,
+                    color: Colors.black54
+                  ),
+                ),
+                Container(
+                  width: SizeInfo.displayWidth,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller1,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller2,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller3,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller4,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller5,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                fontSize: 12
+                              ),
+                              controller: _controller6,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller7,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller8,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            width: SizeInfo.blockWidth,
+                            height: 60,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                              controller: _controller9,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  hintText: "ユーザー名"
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                FlatButton(
+                  child: Text("スタート"),
+                  onPressed: (){
+                    startButtonPushed();
+                  },
+                )
+              ],
+            ),
+          )
+        ),
+      )
     );
   }
 
-  void endDialog(context) {
+  void startButtonPushed() {
+    AppInfo.user = [];
+    if (_controller1.text != "") {
+      AppInfo.user.add(_controller1.text);
+      if (hizumeCheck(_controller1.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller2.text != "") {
+      AppInfo.user.add(_controller2.text);
+      if (hizumeCheck(_controller2.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller3.text != "") {
+      AppInfo.user.add(_controller3.text);
+      if (hizumeCheck(_controller3.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller4.text != "") {
+      AppInfo.user.add(_controller4.text);
+      if (hizumeCheck(_controller4.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller5.text != "") {
+      AppInfo.user.add(_controller5.text);
+      if (hizumeCheck(_controller5.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller6.text != "") {
+      AppInfo.user.add(_controller6.text);
+      if (hizumeCheck(_controller6.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller7.text != "") {
+      AppInfo.user.add(_controller7.text);
+      if (hizumeCheck(_controller7.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller8.text != "") {
+      AppInfo.user.add(_controller8.text);
+      if (hizumeCheck(_controller8.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (_controller9.text != "") {
+      AppInfo.user.add(_controller9.text);
+      if (hizumeCheck(_controller9.text)) {
+        hizumeMode = true;
+      }
+    }
+    if (AppInfo.user.length == 0) {
+      return;
+    }else{
+      if (AppInfo.user.length == 1){
+        errorDialog(context);
+      }else{
+        if (hizumeMode == true) {
+          hizumeDialog();
+        }else{
+          AppInfo.title = "AngryMonster";
+          Monster.image = "assets/images/monster/normal";
+          clearText();
+          Navigator.pushReplacementNamed(context, '/start');
+        }
+      }
+    }
+  }
+  /// ユーザー名をリセット
+  void clearText() {
+    _controller1.clear();
+    _controller2.clear();
+    _controller3.clear();
+    _controller4.clear();
+    _controller5.clear();
+    _controller6.clear();
+    _controller7.clear();
+    _controller8.clear();
+    _controller9.clear();
+  }
+
+  void hizumeDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
-          title: Text("Angry!!!"),
-          content: Text("Monsterが怒ってしまいました。"),
+          title: Text("Warning !!!!"),
+          content: Text("ユーザーにひづめさんがいるとモンスターが変化します。準備はいいですか？"),
           actions: <Widget>[
+            // ボタン領域
             FlatButton(
               child: Text(
-                  "終了",
+                  "いや、やめとく",
+                  style: TextStyle(
+                      color: Colors.black54
+                  )
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                  "大丈夫！",
                   style: TextStyle(
                       color: Colors.black54
                   )
               ),
               onPressed: (){
-//                Navigator.pushReplacementNamed(context, '/');
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  settings: RouteSettings(name: '/'),
-                  builder: (BuildContext context) => NewView(),
-                ));
+                AppInfo.title = "AngryHizume";
+                Monster.image = "assets/images/monster/hizume";
+                clearText();
+                Navigator.pushNamedAndRemoveUntil(context, '/start', ModalRoute.withName('/'));
               } ,
             ),
           ],
@@ -147,14 +387,14 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
     );
   }
 
-  void stopDialog(context) {
+  void errorDialog(context) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
-          title: Text("タップ完了"),
-          content: Text("次の方に移動します。"),
+          title: Text("Warning!!!!"),
+          content: Text("ひとりでも遊べますが、、、一人でやります？"),
           actions: <Widget>[
             // ボタン領域
             FlatButton(
@@ -176,8 +416,8 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
                   )
               ),
               onPressed: (){
-                setUser();
-                Navigator.pop(context);
+                clearText();
+                Navigator.pushReplacementNamed(context, '/start');
               } ,
             ),
           ],
@@ -186,147 +426,32 @@ class _StartViewState extends State<StartView> with SingleTickerProviderStateMix
     );
   }
 
-  void setUser() {
-    setState(() {
-      _userColor[_nowUser] = Colors.black54;
-      if (_nowUser == AppInfo.user.length - 1) {
-        _nowUser = 0;
-      }else{
-        _nowUser++;
-      }
-      _userColor[_nowUser] = Colors.red;
-      _counter = _userCounter[_nowUser];
-      createGrid();
-    });
-  }
-
-  void countUp() {
-    _counter++;
-    AppInfo.allCount++;
-    saveData(AppInfo.allCount);
-    if (RandomLogic().randomBool(_counter)) {
-      endDialog(context);
-    }
-    else{
+  getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.get("allCount") == null) {
       setState(() {
-        _userCounter[_nowUser] = _counter;
-        iconState = !iconState;
-        _image = iconState ? "assets/images/state/heart.png" : "assets/images/state/angry.png";
-        _iconImage = iconState ? "assets/images/monster/hizume/heart.png" : "assets/images/monster/hizume/angry.png";
-        createGrid();
+        AppInfo.allCount = 0;
+      });
+    }else{
+      setState(() {
+        AppInfo.allCount = pref.get("allCount");
       });
     }
   }
 
-  void createGrid() async {
-    var list = await createUserContainer();
-    var gridWidget;
-    if (list[0].length < 3) {
-      gridWidget = Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: list[0]
-      );
+  bool hizumeCheck(String name) {
+    if (name == "hizume"
+        || name == "日詰"
+        || name == "ひずめ"
+        || name == "ひづめ"
+        || name == "ヒズメ"
+        || name == "ヒヅメ"
+        || name == "蹄"
+        || name == "ひじゅめ"
+    ) {
+      return true;
+    }else{
+      return false;
     }
-    else{
-      if (list[1].length < 3) {
-        gridWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: list[0]
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: list[1]
-            ),
-          ],
-        );
-      }
-      else{
-        gridWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: list[0]
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: list[1]
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: list[2]
-            ),
-          ],
-        );
-      }
-    }
-    setState(() {
-      grid = gridWidget;
-    });
   }
-
-  Future <List<List<Widget>>> createUserContainer() async {
-    var items1 = <Widget>[];
-    var items2 = <Widget>[];
-    var items3 = <Widget>[];
-    var items = [items1,items2,items3];
-
-    for (var i = 0; i < AppInfo.user.length; i++){
-      var item =
-      Container(
-        width: SizeInfo.blockWidth,
-        height: SizeInfo.blockHeight,
-          decoration: BoxDecoration(
-            border: Border.all(color: _userColor[i]),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Center(
-                child: Text(AppInfo.user[i]),
-              ),
-              Center(
-                child: Container(
-                  width: SizeInfo.blockWidth/2,
-                  height: SizeInfo.blockHeight/2,
-                  child: Center(
-                      child: Text(_userCounter[i].toString()),
-                  ),
-                ),
-              )
-
-            ],
-          )
-      );
-      if (i < 3) {
-        items1.add(item);
-      }else if (3 <= i  && i < 6) {
-        items2.add(item);
-      }else{
-        items3.add(item);
-      }
-
-    }
-    return items;
-  }
-
-  saveData(int allCount) async {
-
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setInt("allCount", allCount);
-  }
-
 }

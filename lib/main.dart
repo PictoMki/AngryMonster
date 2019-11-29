@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'View/MonsterView.dart';
 import 'View/StartView.dart';
-import 'View/NewView.dart';
-import 'View/StartView.dart';
+import 'View/SplashView.dart';
 
 
 void main() => runApp(MyApp());
@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
         routes: {
-          '/': (_) => NewView(),
-          '/new': (context) => NewView(),
-          '/start': (context) => StartView(),
+          '/': (_) => SplashView(),
+          '/new': (context) => StartView(),
+          '/start': (context) => MonsterView(),
         },
       theme: ThemeData(
         primarySwatch: _imsMaterialColor
