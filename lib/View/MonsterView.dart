@@ -44,13 +44,6 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
     _userCounter = [0,0,0,0,0,0,0,0,0];
     _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
 
-    if (AppInfo.user.length < 3){
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 3;
-    }else if (AppInfo.user.length < 6) {
-      SizeInfo.blockHeight = SizeInfo.blockHeight * 2;
-    }else {
-
-    }
 
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
