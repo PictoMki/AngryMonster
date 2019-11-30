@@ -29,6 +29,7 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
   Widget grid;
   static const red = Colors.red;
   static const grey = Colors.black54;
+  var blockHeight;
 
 
   Animation<double> animation;
@@ -44,6 +45,13 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
     _userCounter = [0,0,0,0,0,0,0,0,0];
     _userColor = [red,grey,grey,grey,grey,grey,grey,grey,grey];
 
+    if (AppInfo.user.length < 3){
+      blockHeight = SizeInfo.blockHeight * 3;
+    }else if (AppInfo.user.length < 6) {
+      blockHeight = SizeInfo.blockHeight * 2;
+    }else {
+      blockHeight = SizeInfo.blockHeight;
+    }
 
     controller = AnimationController(
         duration: const Duration(milliseconds: 100),
@@ -316,7 +324,7 @@ class _MonsterViewState extends State<MonsterView> with SingleTickerProviderStat
       var item =
       Container(
         width: SizeInfo.blockWidth,
-        height: SizeInfo.blockHeight,
+        height: blockHeight,
           decoration: BoxDecoration(
             border: Border.all(color: _userColor[i]),
             borderRadius: BorderRadius.circular(10),
