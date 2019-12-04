@@ -9,7 +9,7 @@ class StartView extends StatefulWidget {
   _StartViewState createState() => _StartViewState();
 }
 
-class _StartViewState extends State<StartView>{
+class _StartViewState extends State<StartView> with SingleTickerProviderStateMixin{
 
   TextEditingController _controller1 = TextEditingController();
   TextEditingController _controller2 = TextEditingController();
@@ -26,12 +26,28 @@ class _StartViewState extends State<StartView>{
   var hizumeMode = false;
 
   FocusNode _focusNode = FocusNode();
+  AnimationController _controller;
+  Animation _animation;
 
   @override
   void initState() {
     super.initState();
     getData();
     listView = ListView();
+
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animation = Tween(begin: 300.0, end: 50.0).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    });
 
   }
 
@@ -192,7 +208,7 @@ class _StartViewState extends State<StartView>{
                         children: <Widget>[
                           Container(
                             width: SizeInfo.blockWidth,
-                            height: 60,
+                            height: _animation.value,
                             child: TextField(
                               style: TextStyle(
                                   fontSize: 12
@@ -209,7 +225,7 @@ class _StartViewState extends State<StartView>{
                           ),
                           Container(
                             width: SizeInfo.blockWidth,
-                            height: 60,
+                            height: _animation.value,
                             child: TextField(
                               style: TextStyle(
                                   fontSize: 12
@@ -226,7 +242,7 @@ class _StartViewState extends State<StartView>{
                           ),
                           Container(
                             width: SizeInfo.blockWidth,
-                            height: 60,
+                            height: _animation.value,
                             child: TextField(
                               style: TextStyle(
                                   fontSize: 12
@@ -454,4 +470,6 @@ class _StartViewState extends State<StartView>{
       return false;
     }
   }
+
+
 }
